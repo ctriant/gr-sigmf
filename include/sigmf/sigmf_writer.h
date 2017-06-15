@@ -25,6 +25,7 @@
 #include <vector>
 #include <sigmf/sigmf.h>
 #include <rapidjson/filewritestream.h>
+#include <rapidjson/filereadstream.h>
 #include <rapidjson/prettywriter.h>
 
 namespace gr {
@@ -52,22 +53,26 @@ namespace gr {
 	add_annotation_array (std::vector<annotation> vec);
 
 	void
-	append_captures (capture c, rapidjson::Document *d);
+	complete_sigmf (global obj, std::vector<capture> capture_vec,
+			std::vector<annotation> anno_vec);
 
 	void
-	append_captures (std::vector<capture> vec,
-			 rapidjson::Document *d);
+	append_captures (capture c);
 
 	void
-	append_annotations (annotation c, rapidjson::Document *d);
+	append_captures (std::vector<capture> vec);
 
 	void
-	append_annotations (std::vector<annotation> vec,
-			    rapidjson::Document *d);
+	append_annotations (annotation c);
+
+	void
+	append_annotations (std::vector<annotation> vec);
 
       private:
 	FILE* d_fp;
 	rapidjson::FileWriteStream *d_fws;
+	rapidjson::FileReadStream *d_frs;
+
 	rapidjson::PrettyWriter<rapidjson::FileWriteStream> *d_writer;
 
 	void

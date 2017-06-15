@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<block>
+	<name>sigmf_sink</name>
+	<key>sigmf_sink</key>
+	<category>[sigmf]</category>
+	<import>import sigmf</import>
+	<make>sigmf.sigmf_sink($metadata_filename, $datatype, $version,
+		$description, $author, $license, $hw, $sha512, $sample_rate, $offset)</make>
+
+	<param>
+		<name>Datatype</name>
+		<key>datatype</key>
+		<type>string</type>
+	</param>
+
+	<param>
+		<name>Version</name>
+		<key>version</key>
+		<type>string</type>
+	</param>
+
+	<param>
+		<name>Description</name>
+		<key>description</key>
+		<type>string</type>
+	</param>
+
+	<param>
+		<name>Author</name>
+		<key>author</key>
+		<type>string</type>
+	</param>
+
+	<param>
+		<name>License</name>
+		<key>license</key>
+		<type>string</type>
+	</param>
+
+	<param>
+		<name>Hardware</name>
+		<key>hw</key>
+		<type>string</type>
+	</param>
+
+	<param>
+		<name>Sha512</name>
+		<key>sha512</key>
+		<type>string</type>
+		<hide>all</hide>
+	</param>
+
+	<param>
+		<name>Sample Rate</name>
+		<key>sample_rate</key>
+		<value>0</value>
+		<type>float</type>
+	</param>
+
+	<param>
+		<name>Offset</name>
+		<key>offset</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+
+	<param>
+		<name>File</name>
+		<key>metadata_filename</key>
+		<type>file_save</type>
+	</param>
+
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+
+</block>

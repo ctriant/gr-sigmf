@@ -34,8 +34,8 @@ namespace gr {
 	    sigmf (metadata_filename, type)
     {
       d_fp = fopen (metadata_filename.c_str (), "r");
-      d_frs = new rapidjson::FileReadStream (d_fp, d_buf,
-					     sizeof(d_buf));
+      d_frs = new rapidjson::FileReadStream (d_fp, d_buf_r,
+					     sizeof(d_buf_r));
       if (d_doc->ParseStream<rapidjson::kParseStopWhenDoneFlag> (
 	  *d_frs).HasParseError ()) {
 	throw std::runtime_error (

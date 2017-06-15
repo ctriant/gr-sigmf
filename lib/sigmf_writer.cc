@@ -34,13 +34,12 @@ namespace gr {
 				sigmfType type) :
 	    sigmf (metadata_filename, type)
     {
-      d_fp = fopen (metadata_filename.c_str (), "r+");
-      d_fws = new rapidjson::FileWriteStream (d_fp, d_buf,
-					      sizeof(d_buf));
+      d_fp = fopen (metadata_filename.c_str (), "w");
+      d_fws = new rapidjson::FileWriteStream (d_fp, d_buf_w,
+					      sizeof(d_buf_w));
       d_writer = new rapidjson::PrettyWriter<
 	  rapidjson::FileWriteStream> (*d_fws);
 
-      init_json ();
     }
 
     sigmf_writer::~sigmf_writer ()
@@ -55,6 +54,8 @@ namespace gr {
       rapidjson::Document d;
 
       if (d_doc->Empty ()) {
+	std::cout << "Document is empty and ready to be filled"
+	    << std::endl;
 	d_writer->StartObject ();
 	switch (d_type)
 	  {
@@ -101,6 +102,7 @@ namespace gr {
     void
     sigmf_writer::add_global_object (global obj)
     {
+      d_writer->Key ("global");
       d_writer->StartObject ();
       if (obj.get_datatype ().empty ()) {
 	throw std::runtime_error ("sigmf_writer: datatype empty");
@@ -179,6 +181,7 @@ namespace gr {
     sigmf_writer::add_capture_array (std::vector<capture> vec)
     {
       if (!vec.empty ()) {
+	d_writer->Key ("capture");
 	d_writer->StartArray ();
 	for (size_t i = 0; i < vec.size (); i++) {
 	  add_capture_object (vec[i]);
@@ -232,6 +235,7 @@ namespace gr {
     sigmf_writer::add_annotation_array (std::vector<annotation> vec)
     {
       if (!vec.empty ()) {
+	d_writer->Key ("annotation");
 	d_writer->StartArray ();
 	for (size_t i = 0; i < vec.size (); i++) {
 	  add_annotation_object (vec[i]);
@@ -241,12 +245,26 @@ namespace gr {
     }
 
     void
-    sigmf_writer::append_captures (capture c, rapidjson::Document *d)
+    sigmf_writer::complete_sigmf (global obj,
+				  std::vector<capture> capture_vec,
+				  std::vector<annotation> anno_vec)
     {
-      if ((*d).HasMember ("capture")) {
+      if (!capture_vec.empty () && !anno_vec.empty ()) {
+	d_writer->StartObject ();
+	add_global_object (obj);
+	add_capture_array (capture_vec);
+	add_annotation_array (anno_vec);
+	d_writer->EndObject ();
+      }
+    }
+
+    void
+    sigmf_writer::append_captures (capture c)
+    {
+      if ((*d_doc).HasMember ("capture")) {
 	rapidjson::Value *v = parse_capture (c);
-	(*d)["capture"].PushBack (*v, (*d).GetAllocator ());
-	(*d).Accept (*d_writer);
+	(*d_doc)["capture"].PushBack (*v, (*d_doc).GetAllocator ());
+	(*d_doc).Accept (*d_writer);
       }
       else {
 	throw std::runtime_error (
@@ -255,16 +273,15 @@ namespace gr {
     }
 
     void
-    sigmf_writer::append_captures (std::vector<capture> vec,
-				   rapidjson::Document *d)
+    sigmf_writer::append_captures (std::vector<capture> vec)
     {
       rapidjson::Value *v;
-      if ((*d).HasMember ("capture")) {
+      if ((*d_doc).HasMember ("capture")) {
 	for (size_t s = 0; s < vec.size (); s++) {
 	  v = parse_capture (vec[s]);
-	  (*d)["capture"].PushBack (*v, (*d).GetAllocator ());
+	  (*d_doc)["capture"].PushBack (*v, (*d_doc).GetAllocator ());
 	}
-	(*d).Accept (*d_writer);
+	(*d_doc).Accept (*d_writer);
       }
       else {
 	throw std::runtime_error (
@@ -273,13 +290,14 @@ namespace gr {
     }
 
     void
-    sigmf_writer::append_annotations (annotation a,
-				      rapidjson::Document *d)
+    sigmf_writer::append_annotations (annotation a)
     {
-      if ((*d).HasMember ("annotation")) {
-	rapidjson::Value *v = parse_annotation (a);
-	(*d)["annotation"].PushBack (*v, (*d).GetAllocator ());
-	(*d).Accept (*d_writer);
+      rapidjson::Document d;
+      d_doc->ParseStream<rapidjson::kParseStopWhenDoneFlag> (*d_fws);
+      if ((*d_doc).HasMember ("annotation")) {
+	rapidjson::Value *v = parse_annotation (a, &d);
+	(*d_doc)["annotation"].PushBack (*v, d.GetAllocator ());
+	(*d_doc).Accept (*d_writer);
       }
       else {
 	throw std::runtime_error (
@@ -288,16 +306,17 @@ namespace gr {
     }
 
     void
-    sigmf_writer::append_annotations (std::vector<annotation> vec,
-				      rapidjson::Document *d)
+    sigmf_writer::append_annotations (std::vector<annotation> vec)
     {
       rapidjson::Value *v;
-      if ((*d).HasMember ("annotation")) {
+      rapidjson::Document d;
+      d.SetObject ();
+      if ((*d_doc).HasMember ("annotation")) {
 	for (size_t s = 0; s < vec.size (); s++) {
-	  v = parse_annotation (vec[s]);
-	  (*d)["annotation"].PushBack (*v, (*d).GetAllocator ());
+	  v = parse_annotation (vec[s], &d);
+	  (*d_doc)["annotation"].PushBack (*v, d.GetAllocator ());
 	}
-	(*d).Accept (*d_writer);
+	(*d_doc).Accept (*d_writer);
       }
       else {
 	throw std::runtime_error (

@@ -24,6 +24,7 @@
 
 #include <gnuradio/io_signature.h>
 #include <sigmf/sigmf.h>
+#include <iostream>
 
 namespace gr {
   namespace sigmf {
@@ -210,19 +211,19 @@ namespace gr {
 	  rapidjson::kObjectType);
       rapidjson::Document d;
 
-      if (obj.get_sample_start () != -1) {
+      if (obj.get_sample_start () == -1) {
 	throw std::runtime_error (
 	    "parse_capture: sample_start empty");
       }
       val->AddMember ("core:sample_start", obj.get_sample_start (),
 		      d.GetAllocator ());
 
-      if (obj.get_frequency () == -1) {
+      if (obj.get_frequency () != -1) {
 	val->AddMember ("core:frequency", obj.get_frequency (),
 			d.GetAllocator ());
       }
 
-      if (obj.get_datetime ().empty ()) {
+      if (!obj.get_datetime ().empty ()) {
 	rapidjson::Value s (obj.get_datetime ().c_str (),
 			    d.GetAllocator ());
 	val->AddMember ("core:datetime", s, d.GetAllocator ());
@@ -232,50 +233,49 @@ namespace gr {
     }
 
     rapidjson::Value*
-    sigmf::parse_annotation (annotation obj)
+    sigmf::parse_annotation (annotation obj, rapidjson::Document *d)
     {
+      rapidjson::Document d_temp;
       rapidjson::Value* val = new rapidjson::Value (
 	  rapidjson::kObjectType);
-      rapidjson::Document d;
 
-      if (obj.get_sample_start () != -1) {
+      if (obj.get_sample_start () == -1) {
 	throw std::runtime_error (
-	    "parse_capture: sample_start empty");
+	    "parse_annotation: sample_start empty");
       }
       val->AddMember ("core:sample_start", obj.get_sample_start (),
-		      d.GetAllocator ());
+		      (*d).GetAllocator ());
 
-      if (obj.get_sample_count () != -1) {
+      if (obj.get_sample_count () == -1) {
 	throw std::runtime_error (
-	    "parse_capture: sample_count empty");
+	    "parse_annotation: sample_count empty");
       }
-      val->AddMember ("core:sample_count", obj.get_sample_start (),
-		      d.GetAllocator ());
+      val->AddMember ("core:sample_count", obj.get_sample_count (),
+		      (*d).GetAllocator ());
 
-      if (obj.get_freq_lower_edge () == -1) {
+      if (obj.get_freq_lower_edge () != -1) {
 	val->AddMember ("core:freq_lower_edge",
 			obj.get_freq_lower_edge (),
-			d.GetAllocator ());
+			(*d).GetAllocator ());
       }
 
-      if (obj.get_freq_upper_edge () == -1) {
+      if (obj.get_freq_upper_edge () != -1) {
 	val->AddMember ("core:freq_upper_edge",
 			obj.get_freq_upper_edge (),
-			d.GetAllocator ());
+			(*d).GetAllocator ());
       }
 
-      if (obj.get_comment ().empty ()) {
+      if (!obj.get_comment ().empty ()) {
 	rapidjson::Value s (obj.get_comment ().c_str (),
-			    d.GetAllocator ());
-	val->AddMember ("core:comment", s, d.GetAllocator ());
+			    (*d).GetAllocator ());
+	val->AddMember ("core:comment", s, (*d).GetAllocator ());
       }
 
-      if (obj.get_generator ().empty ()) {
+      if (!obj.get_generator ().empty ()) {
 	rapidjson::Value s (obj.get_generator ().c_str (),
-			    d.GetAllocator ());
-	val->AddMember ("core:generator", s, d.GetAllocator ());
+			    (*d).GetAllocator ());
+	val->AddMember ("core:generator", s, (*d).GetAllocator ());
       }
-
       return val;
     }
 
@@ -302,8 +302,3 @@ namespace gr {
   } /* namespace sigmf */
 } /* namespace gr */
 
-rapidjson::Document*
-gr::sigmf::sigmf::get_doc ()
-{
-  return d_doc;
-}

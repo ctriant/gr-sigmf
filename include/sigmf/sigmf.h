@@ -36,9 +36,6 @@
 namespace gr {
   namespace sigmf {
 
-    class sigmf_reader;
-    class sigmf_writer;
-
     /*!
      * \brief Class that represents a valid SiMF metadata file.
      *
@@ -99,14 +96,15 @@ namespace gr {
 	parse_capture (capture obj);
 
 	rapidjson::Value*
-	parse_annotation (annotation obj);
+	parse_annotation (annotation obj, rapidjson::Document *d);
 
 	sigmfType
 	get_type () const;
 
       protected:
 
-	char d_buf[RAPIDJSON_BUFFER_SIZE];
+	char d_buf_w[RAPIDJSON_BUFFER_SIZE];
+	char d_buf_r[RAPIDJSON_BUFFER_SIZE];
 
 	std::string d_metadata_filename;
 	std::string d_dataset_filename;
@@ -126,9 +124,6 @@ namespace gr {
 
 	rapidjson::Value::ValueIterator d_annotation_itr_begin;
 	rapidjson::Value::ValueIterator d_annotation_itr_end;
-
-	sigmf_reader *reader;
-	sigmf_writer *writer;
 
 	sigmfType d_type;
 
