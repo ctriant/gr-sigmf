@@ -32,21 +32,16 @@ namespace gr {
 
     sigmf_sink::sptr
     sigmf_sink::make (const std::string& metadata_filename,
-		      std::string datatype,
-		      std::string version,
-		      std::string description,
-		      std::string author,
-		      std::string license,
-		      std::string hw,
-		      std::string sha512,
-		      double sample_rate,
+		      std::string datatype, std::string version,
+		      std::string description, std::string author,
+		      std::string license, std::string hw,
+		      std::string sha512, double sample_rate,
 		      size_t offset)
     {
       return gnuradio::get_initial_sptr (
 	  new sigmf_sink_impl (metadata_filename, datatype, version,
-			       description, author, license,
-			       hw, sha512, sample_rate,
-			       offset));
+			       description, author, license, hw,
+			       sha512, sample_rate, offset));
     }
 
     /*
@@ -55,9 +50,8 @@ namespace gr {
     sigmf_sink_impl::sigmf_sink_impl (
 	const std::string& metadata_filename, std::string datatype,
 	std::string version, std::string description,
-	std::string author, std::string license,
-	std::string hw, std::string sha512, double sample_rate,
-	size_t offset) :
+	std::string author, std::string license, std::string hw,
+	std::string sha512, double sample_rate, size_t offset) :
 	    gr::sync_block (
 		"sigmf_sink",
 		gr::io_signature::make (1, 1, sizeof(gr_complex)),
@@ -66,6 +60,7 @@ namespace gr {
 		      description, author, license, hw)
     {
       d_full_w = new sigmf_writer (metadata_filename, SIGMF_FULL);
+      d_full_w->append_global(d_global);
     }
 
     /*
@@ -73,8 +68,6 @@ namespace gr {
      */
     sigmf_sink_impl::~sigmf_sink_impl ()
     {
-      d_full_w->complete_sigmf(d_global, d_captures, d_annotations);
-
       delete d_full_w;
 
     }
@@ -94,22 +87,17 @@ namespace gr {
       pmt::pmt_t val;
       if (tags.size () > 0) {
 	for (size_t i = 0; i < tags.size (); i++) {
-	  if (pmt::symbol_to_string (tags[i].key) == "annotation") {
-	    val = pmt::dict_ref (
-		tags[i].value, pmt::string_to_symbol ("sample_count"),
-		pmt::get_PMT_NIL ());
+	  if (pmt::symbol_to_string (tags[i].key) == "rx_freq") {
+	    capture c = capture (pmt::to_double(tags[i].value));
 	    annotation a = annotation (tags[i].offset,
-				       pmt::to_long (val));
-	    d_annotations.push_back (a);
-	  }
-	  else if (pmt::symbol_to_string (tags[i].key) == "capture") {
-	    capture c = capture (tags[i].offset);
-	    d_captures.push_back (c);
+				       pmt::to_double(tags[i].value));
+
+	    d_full_w->append_annotations(a);
+	    d_full_w->append_captures(c);
 	  }
 	}
       }
 
-      // Tell runtime system how many output items we produced.
       return noutput_items;
     }
 

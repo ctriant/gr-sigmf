@@ -34,17 +34,26 @@ namespace gr {
 				sigmfType type) :
 	    sigmf (metadata_filename, type)
     {
-      d_fp = fopen (metadata_filename.c_str (), "w");
-      d_fws = new rapidjson::FileWriteStream (d_fp, d_buf_w,
-					      sizeof(d_buf_w));
-      d_writer = new rapidjson::PrettyWriter<
-	  rapidjson::FileWriteStream> (*d_fws);
+      update_writer("w");
 
+      init_json ();
+      fclose (d_fp);
+
+      d_fp = fopen (metadata_filename.c_str (), "r");
+      d_frs = new rapidjson::FileReadStream (d_fp, d_buf_r,
+					     sizeof(d_buf_r));
+      if (d_doc->ParseStream<rapidjson::kParseStopWhenDoneFlag> (
+	  *d_frs).HasParseError ()) {
+	throw std::runtime_error (
+	    GetParseError_En (d_doc->GetParseError ()));
+      }
+
+      init_object_iterators (d_type);
+      fclose (d_fp);
     }
 
     sigmf_writer::~sigmf_writer ()
     {
-      fclose (d_fp);
     }
 
     void
@@ -259,12 +268,38 @@ namespace gr {
     }
 
     void
+    sigmf_writer::append_global (global g)
+    {
+      rapidjson::Document d;
+
+      parse();
+      update_writer("r+");
+
+      if ((*d_doc).HasMember ("global")) {
+	rapidjson::Value *v = parse_global(g, &d);
+	(*d_doc)["global"].CopyFrom(*v, d.GetAllocator());
+	(*d_doc).Accept (*d_writer);
+	fclose (d_fp);
+      }
+      else {
+	throw std::runtime_error (
+	    "append_global: no top-level object found");
+      }
+    }
+
+    void
     sigmf_writer::append_captures (capture c)
     {
+      rapidjson::Document d;
+
+      parse();
+      update_writer("r+");
+
       if ((*d_doc).HasMember ("capture")) {
-	rapidjson::Value *v = parse_capture (c);
-	(*d_doc)["capture"].PushBack (*v, (*d_doc).GetAllocator ());
+	rapidjson::Value *v = parse_capture (c, &d);
+	(*d_doc)["capture"].PushBack (*v, d.GetAllocator ());
 	(*d_doc).Accept (*d_writer);
+	fclose (d_fp);
       }
       else {
 	throw std::runtime_error (
@@ -276,12 +311,18 @@ namespace gr {
     sigmf_writer::append_captures (std::vector<capture> vec)
     {
       rapidjson::Value *v;
+      rapidjson::Document d;
+
+      parse();
+      update_writer("r+");
+
       if ((*d_doc).HasMember ("capture")) {
 	for (size_t s = 0; s < vec.size (); s++) {
-	  v = parse_capture (vec[s]);
+	  v = parse_capture (vec[s], &d);
 	  (*d_doc)["capture"].PushBack (*v, (*d_doc).GetAllocator ());
 	}
 	(*d_doc).Accept (*d_writer);
+	fclose(d_fp);
       }
       else {
 	throw std::runtime_error (
@@ -293,11 +334,15 @@ namespace gr {
     sigmf_writer::append_annotations (annotation a)
     {
       rapidjson::Document d;
-      d_doc->ParseStream<rapidjson::kParseStopWhenDoneFlag> (*d_fws);
+
+      parse();
+      update_writer("r+");
+
       if ((*d_doc).HasMember ("annotation")) {
 	rapidjson::Value *v = parse_annotation (a, &d);
 	(*d_doc)["annotation"].PushBack (*v, d.GetAllocator ());
 	(*d_doc).Accept (*d_writer);
+	fclose (d_fp);
       }
       else {
 	throw std::runtime_error (
@@ -310,6 +355,10 @@ namespace gr {
     {
       rapidjson::Value *v;
       rapidjson::Document d;
+
+      parse();
+      update_writer("r+");
+
       d.SetObject ();
       if ((*d_doc).HasMember ("annotation")) {
 	for (size_t s = 0; s < vec.size (); s++) {
@@ -317,11 +366,40 @@ namespace gr {
 	  (*d_doc)["annotation"].PushBack (*v, d.GetAllocator ());
 	}
 	(*d_doc).Accept (*d_writer);
+	fclose(d_fp);
       }
       else {
 	throw std::runtime_error (
 	    "append_annotations: no top-level object found");
       }
+    }
+
+    void
+    sigmf_writer::parse() {
+      d_fp = fopen (d_metadata_filename.c_str (), "r");
+      d_frs = new rapidjson::FileReadStream (d_fp, d_buf_r,
+					     sizeof(d_buf_r));
+      if (d_doc->ParseStream<rapidjson::kParseStopWhenDoneFlag> (
+	  *d_frs).HasParseError ()) {
+	throw std::runtime_error (
+	    GetParseError_En (d_doc->GetParseError ()));
+      }
+      fclose (d_fp);
+    }
+
+    void
+    sigmf_writer::update_writer(std::string rights){
+      d_fp = fopen (d_metadata_filename.c_str (), rights.c_str());
+      d_fws = new rapidjson::FileWriteStream (d_fp, d_buf_w,
+					      sizeof(d_buf_w));
+      d_writer = new rapidjson::PrettyWriter<
+	  rapidjson::FileWriteStream> (*d_fws);
+    }
+
+    void
+    sigmf_writer::set_document (rapidjson::Document *doc)
+    {
+      d_doc = doc;
     }
 
   } /* namespace sigmf */

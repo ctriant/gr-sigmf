@@ -43,11 +43,12 @@ namespace gr {
       }
 
       init_object_iterators (d_type);
+      fclose (d_fp);
     }
 
     sigmf_reader::~sigmf_reader ()
     {
-      fclose (d_fp);
+
     }
 
     global
@@ -300,6 +301,11 @@ namespace gr {
 	annotations.push_back (a);
       }
       return annotations;
+    }
+
+    rapidjson::Document*
+    sigmf_reader::get_document () {
+      return d_doc;
     }
 
   } /* namespace sigmf */

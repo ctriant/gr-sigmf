@@ -57,6 +57,9 @@ namespace gr {
 			std::vector<annotation> anno_vec);
 
 	void
+	append_global (global g);
+
+	void
 	append_captures (capture c);
 
 	void
@@ -67,6 +70,18 @@ namespace gr {
 
 	void
 	append_annotations (std::vector<annotation> vec);
+
+	void
+	add_annotation_object (annotation obj);
+
+	void
+	parse ();
+
+	void
+	update_writer (std::string rights);
+
+	void
+	set_document (rapidjson::Document *doc);
 
       private:
 	FILE* d_fp;
@@ -81,8 +96,6 @@ namespace gr {
 	void
 	add_capture_object (capture obj);
 
-	void
-	add_annotation_object (annotation obj);
     };
 
   } // namespace sigmf

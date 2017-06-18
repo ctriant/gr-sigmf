@@ -90,10 +90,10 @@ namespace gr {
 	    const rapidjson::Value::MemberIterator& globalitrend);
 
 	rapidjson::Value*
-	parse_global (global obj);
+	parse_global (global obj, rapidjson::Document *d);
 
 	rapidjson::Value*
-	parse_capture (capture obj);
+	parse_capture (capture obj, rapidjson::Document *d);
 
 	rapidjson::Value*
 	parse_annotation (annotation obj, rapidjson::Document *d);

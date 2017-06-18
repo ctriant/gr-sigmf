@@ -59,6 +59,9 @@ namespace gr {
 	std::vector<annotation>
 	get_annotations ();
 
+	rapidjson::Document*
+	get_document ();
+
       private:
 	FILE* d_fp;
 	rapidjson::FileReadStream *d_frs;
