@@ -44,19 +44,6 @@ namespace gr {
 	~sigmf_writer ();
 
 	void
-	add_global_object (global obj);
-
-	void
-	add_capture_array (std::vector<capture> vec);
-
-	void
-	add_annotation_array (std::vector<annotation> vec);
-
-	void
-	complete_sigmf (global obj, std::vector<capture> capture_vec,
-			std::vector<annotation> anno_vec);
-
-	void
 	append_global (global g);
 
 	void
