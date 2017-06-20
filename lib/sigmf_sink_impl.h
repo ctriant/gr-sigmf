@@ -23,6 +23,7 @@
 
 #include <sigmf/sigmf_sink.h>
 #include <sigmf/sigmf_writer.h>
+#include <queue>
 
 namespace gr {
   namespace sigmf {
@@ -37,15 +38,17 @@ namespace gr {
 
 	global d_global;
 
+	bool d_annot_rcvd;
+	tag_t d_last_tag_rcvd;
+
+	std::queue<tag_t> d_annot_tag_queue;
+
       public:
 	sigmf_sink_impl (const std::string& metadata_filename,
 			 std::string datatype, std::string version,
-			 std::string description,
-			 std::string author,
-			 std::string license,
-			 std::string hw,
-			 std::string sha512,
-			 double sample_rate,
+			 std::string description, std::string author,
+			 std::string license, std::string hw,
+			 std::string sha512, double sample_rate,
 			 size_t offset);
 	~sigmf_sink_impl ();
 
@@ -54,6 +57,9 @@ namespace gr {
 	work (int noutput_items,
 	      gr_vector_const_void_star &input_items,
 	      gr_vector_void_star &output_items);
+
+	void
+	handle_tag (tag_t tag);
 
     };
 

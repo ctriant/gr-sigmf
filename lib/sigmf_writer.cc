@@ -39,17 +39,8 @@ namespace gr {
       init_json ();
       fclose (d_fp);
 
-      d_fp = fopen (metadata_filename.c_str (), "r");
-      d_frs = new rapidjson::FileReadStream (d_fp, d_buf_r,
-					     sizeof(d_buf_r));
-      if (d_doc->ParseStream<rapidjson::kParseStopWhenDoneFlag> (
-	  *d_frs).HasParseError ()) {
-	throw std::runtime_error (
-	    GetParseError_En (d_doc->GetParseError ()));
-      }
-
+      parse();
       init_object_iterators (d_type);
-      fclose (d_fp);
     }
 
     sigmf_writer::~sigmf_writer ()

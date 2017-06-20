@@ -57,10 +57,11 @@ namespace gr {
 		gr::io_signature::make (1, 1, sizeof(gr_complex)),
 		gr::io_signature::make (0, 0, 0)),
 	    d_global (datatype, version, sample_rate, sha512, offset,
-		      description, author, license, hw)
+		      description, author, license, hw),
+	    d_annot_rcvd (false)
     {
       d_full_w = new sigmf_writer (metadata_filename, SIGMF_FULL);
-      d_full_w->append_global(d_global);
+      d_full_w->append_global (d_global);
     }
 
     /*
@@ -87,18 +88,37 @@ namespace gr {
       pmt::pmt_t val;
       if (tags.size () > 0) {
 	for (size_t i = 0; i < tags.size (); i++) {
-	  if (pmt::symbol_to_string (tags[i].key) == "rx_freq") {
-	    capture c = capture (pmt::to_double(tags[i].value));
-	    annotation a = annotation (tags[i].offset,
-				       pmt::to_double(tags[i].value));
-
-	    d_full_w->append_annotations(a);
-	    d_full_w->append_captures(c);
-	  }
+	  handle_tag (tags[i]);
 	}
       }
 
       return noutput_items;
+    }
+
+    void
+    sigmf_sink_impl::handle_tag (tag_t tag)
+    {
+      /* Handle RX frequency change tag.
+       * Following the format of UHD source block tags
+       */
+      if (pmt::symbol_to_string (tag.key) == "rx_freq") {
+	capture c = capture (pmt::to_double (tag.value));
+	d_full_w->append_captures (c);
+      }
+      /* Handle annotation_start tag */
+      if (pmt::symbol_to_string (tag.key) == "annotation_start") {
+	/* Add received tag into queue */
+	d_annot_tag_queue.push (tag);
+      }
+      if (pmt::symbol_to_string (tag.key) == "annotation_end") {
+	d_last_tag_rcvd = d_annot_tag_queue.front ();
+	d_annot_tag_queue.pop ();
+	annotation a = annotation (
+	    d_last_tag_rcvd.offset,
+	    tag.offset - d_last_tag_rcvd.offset);
+	// TODO: Parse tag values to extract other annotation fields
+	d_full_w->append_annotations (a);
+      }
     }
 
   } /* namespace sigmf */
