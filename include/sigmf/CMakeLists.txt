@@ -28,5 +28,6 @@ install(FILES
     sigmf.h
     sigmf_reader.h
     sigmf_writer.h
-    sigmf_sink.h DESTINATION include/sigmf
+    sigmf_sink.h
+    burst_tagger.h DESTINATION include/sigmf
 )

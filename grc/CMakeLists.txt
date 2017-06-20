@@ -17,5 +17,6 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 install(FILES
-    sigmf_sink.xml DESTINATION share/gnuradio/grc/blocks
+    sigmf_sink.xml
+    sigmf_burst_tagger.xml DESTINATION share/gnuradio/grc/blocks
 )

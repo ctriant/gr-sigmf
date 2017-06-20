@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <block>
-	<name>sigmf_sink</name>
+	<name>SigMF Sink</name>
 	<key>sigmf_sink</key>
 	<category>[sigmf]</category>
 	<import>import sigmf</import>

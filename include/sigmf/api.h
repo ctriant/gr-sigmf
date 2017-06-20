@@ -23,6 +23,7 @@
 #define INCLUDED_SIGMF_API_H
 
 #include <gnuradio/attributes.h>
+#include <limits>
 
 #ifdef gnuradio_sigmf_EXPORTS
 #  define SIGMF_API __GR_ATTR_EXPORT

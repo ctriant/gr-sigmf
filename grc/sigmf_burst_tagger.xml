@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Burst tagger:
+##	all types, 1 output, 2 input: stream & trigger (short)
+###################################################
+ -->
+<block>
+	<name>Annotation tagger</name>
+	<key>burst_tagger</key>
+	<category>[sigmf]</category>
+	<import>import sigmf</import>
+	<make>sigmf.burst_tagger($type.size)
+	</make>
+	<callback>set_freq_lower_edge ($freq_lower_edge)</callback>
+	<callback>set_freq_upper_edge ($freq_upper_edge)</callback>
+	<callback>set_comment ($comment)</callback>
+	<callback>set_generator ($generator)</callback>
+	<param>
+	<name>Stream Type</name>
+	<key>type</key>
+	<type>enum</type>
+	<option>
+		<name>Complex</name>
+		<key>complex</key>
+		<opt>size:gr.sizeof_gr_complex</opt>
+	</option>
+	<option>
+		<name>Float</name>
+		<key>float</key>
+		<opt>size:gr.sizeof_float</opt>
+	</option>
+	<option>
+		<name>Int</name>
+		<key>int</key>
+		<opt>size:gr.sizeof_int</opt>
+	</option>
+	<option>
+		<name>Short</name>
+		<key>short</key>
+		<opt>size:gr.sizeof_short</opt>
+	</option>
+	<option>
+		<name>Byte</name>
+		<key>byte</key>
+		<opt>size:gr.sizeof_char</opt>
+	</option>
+    </param>
+    <param>
+		<name>Lower Frequency</name>
+		<key>freq_lower_edge</key>
+		<type>float</type>
+	</param>
+	    <param>
+		<name>Upper Frequency</name>
+		<key>freq_upper_edge</key>
+		<type>float</type>
+	</param>
+	<param>
+		<name>Generator</name>
+		<key>generator</key>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Comment</name>
+		<key>comment</key>
+		<type>string</type>
+	</param>
+	<param>
+		<name>False Value</name>
+		<key>false_value</key>
+		<value>False</value>
+		<type>bool</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<vlen>1</vlen>
+	</sink>
+	<sink>
+		<name>trigger</name>
+		<type>short</type>
+		<vlen>1</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+		<vlen>1</vlen>
+	</source>
+</block>
