@@ -11,11 +11,15 @@
 	<category>[sigmf]</category>
 	<import>import sigmf</import>
 	<make>sigmf.burst_tagger($type.size)
+self.$(id).set_generator($generator)
+self.$(id).set_comment($annotation_comment)
+self.$(id).set_tag_gate($gate)
 	</make>
-	<callback>set_freq_lower_edge ($freq_lower_edge)</callback>
-	<callback>set_freq_upper_edge ($freq_upper_edge)</callback>
-	<callback>set_comment ($comment)</callback>
-	<callback>set_generator ($generator)</callback>
+	<callback>set_freq_lower_edge($freq_lower_edge)</callback>
+	<callback>set_freq_upper_edge($freq_upper_edge)</callback>
+	<callback>set_generator($generator)</callback>
+	<callback>set_comment($annotation_comment)</callback>
+	<callback>set_tag_gate($gate)</callback>
 	<param>
 	<name>Stream Type</name>
 	<key>type</key>
@@ -63,12 +67,12 @@
 	</param>
 	<param>
 		<name>Comment</name>
-		<key>comment</key>
+		<key>annotation_comment</key>
 		<type>string</type>
 	</param>
 	<param>
-		<name>False Value</name>
-		<key>false_value</key>
+		<name>Tag gate</name>
+		<key>gate</key>
 		<value>False</value>
 		<type>bool</type>
 	</param>

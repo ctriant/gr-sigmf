@@ -55,17 +55,20 @@ namespace gr {
       static sptr make(size_t itemsize);
 
 
-//      virtual void
-//      set_freq_lower_edge (double freq) = 0;
-//
-//      virtual void
-//      set_freq_upper_edge (double freq) = 0;
-//
-//      virtual void
-//      set_comment (const std::string &comment) = 0;
-//
-//      virtual void
-//      set_generator (const std::string &generator) = 0;
+      virtual void
+      set_freq_lower_edge (double freq) = 0;
+
+      virtual void
+      set_freq_upper_edge (double freq) = 0;
+
+      virtual void
+      set_comment (const std::string &comment) = 0;
+
+      virtual void
+      set_generator (const std::string &generator) = 0;
+
+      virtual void
+      set_tag_gate (bool state) = 0;
     };
 
   } /* namespace blocks */

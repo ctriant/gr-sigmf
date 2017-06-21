@@ -38,7 +38,6 @@ namespace gr {
 
 	global d_global;
 
-	bool d_annot_rcvd;
 	tag_t d_last_tag_rcvd;
 
 	std::queue<tag_t> d_annot_tag_queue;

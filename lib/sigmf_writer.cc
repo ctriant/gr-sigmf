@@ -34,17 +34,20 @@ namespace gr {
 				sigmfType type) :
 	    sigmf (metadata_filename, type)
     {
-      update_writer("w");
+      update_writer ("w");
 
       init_json ();
       fclose (d_fp);
 
-      parse();
+      parse ();
       init_object_iterators (d_type);
     }
 
     sigmf_writer::~sigmf_writer ()
     {
+      delete[] d_fws;
+      delete[] d_frs;
+      delete[] d_writer;
     }
 
     void
@@ -104,12 +107,12 @@ namespace gr {
     {
       rapidjson::Document d;
 
-      parse();
-      update_writer("r+");
+      parse ();
+      update_writer ("r+");
 
       if ((*d_doc).HasMember ("global")) {
-	rapidjson::Value *v = parse_global(g, &d);
-	(*d_doc)["global"].CopyFrom(*v, d.GetAllocator());
+	rapidjson::Value *v = parse_global (g, &d);
+	(*d_doc)["global"].CopyFrom (*v, d.GetAllocator ());
 	(*d_doc).Accept (*d_writer);
 	fclose (d_fp);
       }
@@ -124,14 +127,14 @@ namespace gr {
     {
       rapidjson::Document d;
 
-      parse();
-      update_writer("r+");
-
+      parse ();
+      update_writer ("r+");
       if ((*d_doc).HasMember ("capture")) {
 	rapidjson::Value *v = parse_capture (c, &d);
 	(*d_doc)["capture"].PushBack (*v, d.GetAllocator ());
 	(*d_doc).Accept (*d_writer);
 	fclose (d_fp);
+	d_doc->GetAllocator().Clear();
       }
       else {
 	throw std::runtime_error (
@@ -145,8 +148,8 @@ namespace gr {
       rapidjson::Value *v;
       rapidjson::Document d;
 
-      parse();
-      update_writer("r+");
+      parse ();
+      update_writer ("r+");
 
       if ((*d_doc).HasMember ("capture")) {
 	for (size_t s = 0; s < vec.size (); s++) {
@@ -154,7 +157,8 @@ namespace gr {
 	  (*d_doc)["capture"].PushBack (*v, (*d_doc).GetAllocator ());
 	}
 	(*d_doc).Accept (*d_writer);
-	fclose(d_fp);
+	fclose (d_fp);
+	d_doc->GetAllocator().Clear();
       }
       else {
 	throw std::runtime_error (
@@ -167,14 +171,15 @@ namespace gr {
     {
       rapidjson::Document d;
 
-      parse();
-      update_writer("r+");
+      parse ();
+      update_writer ("r+");
 
       if ((*d_doc).HasMember ("annotation")) {
 	rapidjson::Value *v = parse_annotation (a, &d);
 	(*d_doc)["annotation"].PushBack (*v, d.GetAllocator ());
 	(*d_doc).Accept (*d_writer);
 	fclose (d_fp);
+	d_doc->GetAllocator().Clear();
       }
       else {
 	throw std::runtime_error (
@@ -188,8 +193,8 @@ namespace gr {
       rapidjson::Value *v;
       rapidjson::Document d;
 
-      parse();
-      update_writer("r+");
+      parse ();
+      update_writer ("r+");
 
       d.SetObject ();
       if ((*d_doc).HasMember ("annotation")) {
@@ -198,7 +203,8 @@ namespace gr {
 	  (*d_doc)["annotation"].PushBack (*v, d.GetAllocator ());
 	}
 	(*d_doc).Accept (*d_writer);
-	fclose(d_fp);
+	fclose (d_fp);
+	d_doc->GetAllocator().Clear();
       }
       else {
 	throw std::runtime_error (
@@ -207,12 +213,13 @@ namespace gr {
     }
 
     void
-    sigmf_writer::parse() {
+    sigmf_writer::parse ()
+    {
       d_fp = fopen (d_metadata_filename.c_str (), "r");
       d_frs = new rapidjson::FileReadStream (d_fp, d_buf_r,
 					     sizeof(d_buf_r));
-      if (d_doc->ParseStream<rapidjson::kParseStopWhenDoneFlag> (
-	  *d_frs).HasParseError ()) {
+      if (d_doc->ParseStream<rapidjson::kParseIterativeFlag,
+	  rapidjson::UTF8<>, rapidjson::FileReadStream> (*d_frs).HasParseError ()) {
 	throw std::runtime_error (
 	    GetParseError_En (d_doc->GetParseError ()));
       }
@@ -220,8 +227,9 @@ namespace gr {
     }
 
     void
-    sigmf_writer::update_writer(std::string rights){
-      d_fp = fopen (d_metadata_filename.c_str (), rights.c_str());
+    sigmf_writer::update_writer (std::string rights)
+    {
+      d_fp = fopen (d_metadata_filename.c_str (), rights.c_str ());
       d_fws = new rapidjson::FileWriteStream (d_fp, d_buf_w,
 					      sizeof(d_buf_w));
       d_writer = new rapidjson::PrettyWriter<

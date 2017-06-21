@@ -57,8 +57,7 @@ namespace gr {
 		gr::io_signature::make (1, 1, sizeof(gr_complex)),
 		gr::io_signature::make (0, 0, 0)),
 	    d_global (datatype, version, sample_rate, sha512, offset,
-		      description, author, license, hw),
-	    d_annot_rcvd (false)
+		      description, author, license, hw)
     {
       d_full_w = new sigmf_writer (metadata_filename, SIGMF_FULL);
       d_full_w->append_global (d_global);
@@ -70,7 +69,6 @@ namespace gr {
     sigmf_sink_impl::~sigmf_sink_impl ()
     {
       delete d_full_w;
-
     }
 
     int
@@ -111,11 +109,47 @@ namespace gr {
 	d_annot_tag_queue.push (tag);
       }
       if (pmt::symbol_to_string (tag.key) == "annotation_end") {
+	pmt::pmt_t tmp_dict;
 	d_last_tag_rcvd = d_annot_tag_queue.front ();
 	d_annot_tag_queue.pop ();
+	tmp_dict = d_last_tag_rcvd.value;
 	annotation a = annotation (
 	    d_last_tag_rcvd.offset,
 	    tag.offset - d_last_tag_rcvd.offset);
+	if (!pmt::eq (tmp_dict, pmt::PMT_NIL)) {
+	  if (pmt::dict_has_key (tmp_dict,
+				 pmt::intern ("freq_lower_edge"))) {
+	    double v = pmt::to_double (
+		pmt::dict_ref (tmp_dict,
+			       pmt::intern ("freq_lower_edge"),
+			       pmt::PMT_NIL));
+	    a.set_freq_lower_edge (v);
+	  }
+	  if (pmt::dict_has_key (tmp_dict,
+				 pmt::intern ("freq_upper_edge"))) {
+	    double v = pmt::to_double (
+		pmt::dict_ref (tmp_dict,
+			       pmt::intern ("freq_upper_edge"),
+			       pmt::PMT_NIL));
+	    a.set_freq_upper_edge (v);
+	  }
+	  if (pmt::dict_has_key (tmp_dict,
+				 pmt::intern ("generator"))) {
+	    std::string v = pmt::symbol_to_string (
+		pmt::dict_ref (tmp_dict,
+			       pmt::intern ("generator"),
+			       pmt::PMT_NIL));
+	    a.set_generator (v);
+	  }
+	  if (pmt::dict_has_key (tmp_dict,
+				 pmt::intern ("comment"))) {
+	    std::string v = pmt::symbol_to_string (
+		pmt::dict_ref (tmp_dict,
+			       pmt::intern ("comment"),
+			       pmt::PMT_NIL));
+	    a.set_comment (v);
+	  }
+	}
 	// TODO: Parse tag values to extract other annotation fields
 	d_full_w->append_annotations (a);
       }

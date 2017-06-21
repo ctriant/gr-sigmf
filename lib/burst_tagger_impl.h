@@ -39,6 +39,8 @@ namespace gr {
 	std::string d_comment;
 	std::string d_generator;
 
+	bool d_state;
+
 	pmt::pmt_t
 	set_tag_value ();
 
@@ -57,6 +59,9 @@ namespace gr {
 
 	void
 	set_generator (const std::string &generator);
+
+	void
+	set_tag_gate (bool state);
 
 	int
 	work (int noutput_items,
