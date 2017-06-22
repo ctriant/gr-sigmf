@@ -100,7 +100,8 @@ namespace gr {
        * Following the format of UHD source block tags
        */
       if (pmt::symbol_to_string (tag.key) == "rx_freq") {
-	capture c = capture (pmt::to_double (tag.value));
+	capture c = capture (tag.offset);
+	c.set_frequency(pmt::to_double (tag.value));
 	d_full_w->append_captures (c);
       }
       /* Handle annotation_start tag */
