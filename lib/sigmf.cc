@@ -285,15 +285,28 @@ namespace gr {
     void
     sigmf::set_filenames (const std::string& metadata_filename)
     {
+      if (metadata_filename.empty()) {
+	throw std::runtime_error (
+			    "Error: Filename not given");
+      }
       d_metadata_filename = metadata_filename;
       d_dataset_filename = metadata_filename;
 
+      std::string metafile_suffix = "sigmf-meta";
       std::string dataset_suffix = "sigmf-data";
       size_t prefix_idx = metadata_filename.find_last_of (".") + 1;
+
+      d_metadata_filename.replace (prefix_idx,
+				   metafile_suffix.length (),
+				   metafile_suffix);
 
       d_dataset_filename.replace (prefix_idx,
 				  dataset_suffix.length (),
 				  dataset_suffix);
+
+      std::cout << d_metadata_filename << std::endl;
+      std::cout << d_dataset_filename << std::endl;
+
     }
 
   } /* namespace sigmf */

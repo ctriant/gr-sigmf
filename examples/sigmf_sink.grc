@@ -583,7 +583,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(887, 347)</value>
+      <value>(887, 395)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -603,7 +603,7 @@
     </param>
     <param>
       <key>name</key>
-      <value></value>
+      <value>Annotation</value>
     </param>
     <param>
       <key>num_inputs</key>
@@ -713,7 +713,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(887, 427)</value>
+      <value>(887, 475)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1052,7 +1052,9 @@
     </param>
     <param>
       <key>comment</key>
-      <value></value>
+      <value>Field file refers to the full path including filename 
+of the SigMF metadata file. Filename extension must
+be .sigmf-meta. If not the block will force the change.</value>
     </param>
     <param>
       <key>affinity</key>
