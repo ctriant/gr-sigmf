@@ -21,8 +21,8 @@
 #ifndef INCLUDED_SIGMF_SIGMF_SINK_IMPL_H
 #define INCLUDED_SIGMF_SIGMF_SINK_IMPL_H
 
-#include <sigmf/sigmf_sink.h>
 #include <sigmf/sigmf_writer.h>
+#include <sigmf/sigmf_sink.h>
 #include <queue>
 
 namespace gr {
@@ -44,6 +44,7 @@ namespace gr {
 
       public:
 	sigmf_sink_impl (const std::string& metadata_filename,
+			 const std::string& dataset_filename,
 			 std::string datatype, std::string version,
 			 std::string description, std::string author,
 			 std::string license, std::string hw,

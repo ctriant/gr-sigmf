@@ -30,8 +30,9 @@ namespace gr {
   namespace sigmf {
 
     sigmf_reader::sigmf_reader (const std::string &metadata_filename,
+				const std::string &dataset_filename,
 				sigmfType type) :
-	    sigmf (metadata_filename, type)
+	    sigmf (metadata_filename, dataset_filename, type)
     {
       d_fp = fopen (metadata_filename.c_str (), "r");
       d_frs = new rapidjson::FileReadStream (d_fp, d_buf_r,

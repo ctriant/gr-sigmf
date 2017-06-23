@@ -22,24 +22,24 @@
 #include "config.h"
 #endif
 
-#include "burst_tagger_impl.h"
+#include "annotation_tagger_impl.h"
 #include <gnuradio/io_signature.h>
 #include <string.h>
 
 namespace gr {
   namespace sigmf {
 
-    burst_tagger::sptr
-    burst_tagger::make (size_t itemsize)
+    annotation_tagger::sptr
+    annotation_tagger::make (size_t itemsize)
     {
       return gnuradio::get_initial_sptr (
-	  new burst_tagger_impl (itemsize));
+	  new annotation_tagger_impl (itemsize));
     }
 
-    burst_tagger_impl::burst_tagger_impl (size_t itemsize) :
+    annotation_tagger_impl::annotation_tagger_impl (size_t itemsize) :
 	    sync_block (
-		"burst_tagger",
-		io_signature::make2 (2, 2, itemsize, sizeof(short)),
+		"annotation_tagger",
+		io_signature::make (1, 1, itemsize),
 		io_signature::make (1, 1, itemsize)),
 	    d_itemsize (itemsize),
 	    d_freq_lower_edge (std::numeric_limits<double>::max ()),
@@ -52,42 +52,42 @@ namespace gr {
       d_id = pmt::string_to_symbol (str.str ());
     }
 
-    burst_tagger_impl::~burst_tagger_impl ()
+    annotation_tagger_impl::~annotation_tagger_impl ()
     {
     }
 
     void
-    burst_tagger_impl::set_freq_lower_edge (double freq)
+    annotation_tagger_impl::set_freq_lower_edge (double freq)
     {
       d_freq_lower_edge = freq;
     }
 
     void
-    burst_tagger_impl::set_freq_upper_edge (double freq)
+    annotation_tagger_impl::set_freq_upper_edge (double freq)
     {
       d_freq_upper_edge = freq;
     }
 
     void
-    burst_tagger_impl::set_comment (const std::string &comment)
+    annotation_tagger_impl::set_comment (const std::string &comment)
     {
       d_comment = comment;
     }
 
     void
-    burst_tagger_impl::set_generator (const std::string &generator)
+    annotation_tagger_impl::set_generator (const std::string &generator)
     {
       d_generator = generator;
     }
 
     void
-    burst_tagger_impl::set_tag_gate (bool state)
+    annotation_tagger_impl::set_tag_gate (bool state)
     {
       d_state = state;
     }
 
     pmt::pmt_t
-    burst_tagger_impl::set_tag_value ()
+    annotation_tagger_impl::set_tag_value ()
     {
       pmt::pmt_t value = pmt::make_dict ();
       if (d_freq_lower_edge != std::numeric_limits<double>::max ()) {
@@ -111,7 +111,7 @@ namespace gr {
     }
 
     int
-    burst_tagger_impl::work (int noutput_items,
+    annotation_tagger_impl::work (int noutput_items,
 			     gr_vector_const_void_star &input_items,
 			     gr_vector_void_star &output_items)
     {

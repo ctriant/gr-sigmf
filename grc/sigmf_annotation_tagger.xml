@@ -6,11 +6,11 @@
 ###################################################
  -->
 <block>
-	<name>Annotation tagger</name>
-	<key>burst_tagger</key>
+	<name>Annotation Tagger</name>
+	<key>annotation_tagger</key>
 	<category>[sigmf]</category>
 	<import>import sigmf</import>
-	<make>sigmf.burst_tagger($type.size)
+	<make>sigmf.annotation_tagger($type.size)
 self.$(id).set_generator($generator)
 self.$(id).set_comment($annotation_comment)
 self.$(id).set_tag_gate($gate)
@@ -79,11 +79,6 @@ self.$(id).set_tag_gate($gate)
 	<sink>
 		<name>in</name>
 		<type>$type</type>
-		<vlen>1</vlen>
-	</sink>
-	<sink>
-		<name>trigger</name>
-		<type>short</type>
 		<vlen>1</vlen>
 	</sink>
 	<source>

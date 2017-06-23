@@ -4,7 +4,7 @@
 	<key>sigmf_sink</key>
 	<category>[sigmf]</category>
 	<import>import sigmf</import>
-	<make>sigmf.sigmf_sink($metadata_filename, $datatype, $version,
+	<make>sigmf.sigmf_sink($metadata_filename, $dataset_filename, $datatype, $version,
 		$description, $author, $license, $hw, $sha512, $sample_rate, $offset)</make>
 
 	<param>
@@ -65,8 +65,14 @@
 	</param>
 
 	<param>
-		<name>File</name>
+		<name>Metadata File</name>
 		<key>metadata_filename</key>
+		<type>file_save</type>
+	</param>
+	
+	<param>
+		<name>Dataset File</name>
+		<key>dataset_filename</key>
 		<type>file_save</type>
 	</param>
 

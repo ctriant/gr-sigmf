@@ -18,15 +18,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_SIGMF_BURST_TAGGER_IMPL_H
-#define INCLUDED_SIGMF_BURST_TAGGER_IMPL_H
+#ifndef INCLUDED_SIGMF_ANNOTATION_TAGGER_IMPL_H
+#define INCLUDED_SIGMF_ANNOTATION_TAGGER_IMPL_H
 
-#include <sigmf/burst_tagger.h>
+#include <sigmf/annotation_tagger.h>
 
 namespace gr {
   namespace sigmf {
 
-    class burst_tagger_impl : public burst_tagger
+    class annotation_tagger_impl : public annotation_tagger
     {
       private:
 	size_t d_itemsize;
@@ -45,8 +45,8 @@ namespace gr {
 	set_tag_value ();
 
       public:
-	burst_tagger_impl (size_t itemsize);
-	~burst_tagger_impl ();
+	annotation_tagger_impl (size_t itemsize);
+	~annotation_tagger_impl ();
 
 	void
 	set_freq_lower_edge (double freq);
@@ -72,5 +72,5 @@ namespace gr {
   } /* namespace sigmf */
 } /* namespace gr */
 
-#endif /* INCLUDED_SIGMF_BURST_TAGGER_IMPL_H */
+#endif /* INCLUDED_SIGMF_ANNOTATION_TAGGER_IMPL_H */
 

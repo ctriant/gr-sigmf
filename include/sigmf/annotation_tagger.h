@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_SIGMF_BURST_TAGGER_H
-#define INCLUDED_SIGMF_BURST_TAGGER_H
+#ifndef INCLUDED_SIGMF_ANNOTATION_TAGGER_H
+#define INCLUDED_SIGMF_ANNOTATION_TAGGER_H
 
 #include <sigmf/api.h>
 #include <gnuradio/sync_block.h>
@@ -42,10 +42,10 @@ namespace gr {
      *
      * The signal on stream 0 is retransmitted to output stream 0.
      */
-    class SIGMF_API burst_tagger : virtual public sync_block
+    class SIGMF_API annotation_tagger : virtual public sync_block
     {
     public:
-      typedef boost::shared_ptr<burst_tagger> sptr;
+      typedef boost::shared_ptr<annotation_tagger> sptr;
 
       /*!
        * Build a burst tagger gnuradio/blocks.
@@ -74,5 +74,5 @@ namespace gr {
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_SIGMF_BURST_TAGGER_H */
+#endif /* INCLUDED_SIGMF_ANNOTATION_TAGGER_H */
 

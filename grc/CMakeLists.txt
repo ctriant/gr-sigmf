@@ -18,5 +18,5 @@
 # Boston, MA 02110-1301, USA.
 install(FILES
     sigmf_sink.xml
-    sigmf_burst_tagger.xml DESTINATION share/gnuradio/grc/blocks
+    sigmf_annotation_tagger.xml DESTINATION share/gnuradio/grc/blocks
 )

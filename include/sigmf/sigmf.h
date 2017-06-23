@@ -43,7 +43,8 @@ namespace gr {
     class SIGMF_API sigmf
     {
       public:
-	sigmf (const std::string &metadata_filename, sigmfType type);
+	sigmf (const std::string &metadata_filename,
+	       const std::string &dataset_filename, sigmfType type);
 
 	~sigmf ();
 
@@ -101,6 +102,12 @@ namespace gr {
 	sigmfType
 	get_type () const;
 
+	const std::string&
+	get_dataset_filename () const;
+
+	const std::string&
+	get_metadata_filename () const;
+
       protected:
 
 	char d_buf_w[RAPIDJSON_BUFFER_SIZE];
@@ -130,7 +137,8 @@ namespace gr {
       private:
 
 	void
-	set_filenames (const std::string& metadata_filename);
+	set_filenames (const std::string& metadata_filename,
+		       const std::string& dataset_filename);
 
     };
 

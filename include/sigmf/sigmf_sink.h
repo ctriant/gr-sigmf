@@ -23,6 +23,7 @@
 
 #include <sigmf/api.h>
 #include <gnuradio/sync_block.h>
+#include <gnuradio/blocks/file_sink_base.h>
 
 namespace gr {
   namespace sigmf {
@@ -32,7 +33,9 @@ namespace gr {
      * \ingroup sigmf
      *
      */
-    class SIGMF_API sigmf_sink : virtual public gr::sync_block
+    class SIGMF_API sigmf_sink : virtual public gr::sync_block,
+	virtual public gr::blocks::file_sink_base
+
     {
       public:
 	typedef boost::shared_ptr<sigmf_sink> sptr;
@@ -47,6 +50,7 @@ namespace gr {
 	 */
 	static sptr
 	make (const std::string& metadata_filename,
+	      const std::string& dataset_filename,
 	      std::string datatype, std::string version,
 	      std::string description = "", std::string author = "",
 	      std::string license = "", std::string hw = "",

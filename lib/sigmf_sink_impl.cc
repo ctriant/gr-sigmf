@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "sigmf_sink_impl.h"
-
 #include <sigmf/sigmf.h>
 
 namespace gr {
@@ -32,6 +31,7 @@ namespace gr {
 
     sigmf_sink::sptr
     sigmf_sink::make (const std::string& metadata_filename,
+		      const std::string& dataset_filename,
 		      std::string datatype, std::string version,
 		      std::string description, std::string author,
 		      std::string license, std::string hw,
@@ -39,16 +39,18 @@ namespace gr {
 		      size_t offset)
     {
       return gnuradio::get_initial_sptr (
-	  new sigmf_sink_impl (metadata_filename, datatype, version,
-			       description, author, license, hw,
-			       sha512, sample_rate, offset));
+	  new sigmf_sink_impl (metadata_filename, dataset_filename,
+			       datatype, version, description, author,
+			       license, hw, sha512, sample_rate,
+			       offset));
     }
 
     /*
      * The private constructor
      */
     sigmf_sink_impl::sigmf_sink_impl (
-	const std::string& metadata_filename, std::string datatype,
+	const std::string& metadata_filename,
+	const std::string& dataset_filename, std::string datatype,
 	std::string version, std::string description,
 	std::string author, std::string license, std::string hw,
 	std::string sha512, double sample_rate, size_t offset) :
@@ -56,10 +58,13 @@ namespace gr {
 		"sigmf_sink",
 		gr::io_signature::make (1, 1, sizeof(gr_complex)),
 		gr::io_signature::make (0, 0, 0)),
+	    d_full_w (
+		new sigmf_writer (metadata_filename, dataset_filename,
+				  SIGMF_FULL)),
 	    d_global (datatype, version, sample_rate, sha512, offset,
-		      description, author, license, hw)
+		      description, author, license, hw),
+	    file_sink_base (dataset_filename.c_str (), true, false)
     {
-      d_full_w = new sigmf_writer (metadata_filename, SIGMF_FULL);
       d_full_w->append_global (d_global);
     }
 
@@ -76,7 +81,7 @@ namespace gr {
 			   gr_vector_const_void_star &input_items,
 			   gr_vector_void_star &output_items)
     {
-      const gr_complex *in = (const gr_complex *) input_items[0];
+      char *inbuf = (char*) input_items[0];
       size_t nitems = std::min (noutput_items, 1024);
 
       std::vector<tag_t> tags;
@@ -90,7 +95,37 @@ namespace gr {
 	}
       }
 
-      return noutput_items;
+      int nwritten = 0;
+
+      do_update (); // update d_fp is reqd
+
+      if (!d_fp)
+	return noutput_items; // drop output on the floor
+
+      while (nwritten < noutput_items) {
+	int count = fwrite (inbuf, sizeof(gr_complex),
+			    noutput_items - nwritten, d_fp);
+	if (count == 0) {
+	  if (ferror (d_fp)) {
+	    std::stringstream s;
+	    s << "file_sink write failed with error " << fileno (d_fp)
+		<< std::endl;
+	    throw std::runtime_error (s.str ());
+	  }
+	  else { // is EOF
+	    break;
+	  }
+	}
+	nwritten += count;
+	inbuf += count * sizeof(gr_complex);
+      }
+
+      if (d_unbuffered)
+	fflush (d_fp);
+
+      return nwritten;
+//
+//      return noutput_items;
     }
 
     void
@@ -101,7 +136,7 @@ namespace gr {
        */
       if (pmt::symbol_to_string (tag.key) == "rx_freq") {
 	capture c = capture (tag.offset);
-	c.set_frequency(pmt::to_double (tag.value));
+	c.set_frequency (pmt::to_double (tag.value));
 	d_full_w->append_captures (c);
       }
       /* Handle annotation_start tag */
@@ -137,22 +172,20 @@ namespace gr {
 	  if (pmt::dict_has_key (tmp_dict,
 				 pmt::intern ("generator"))) {
 	    std::string v = pmt::symbol_to_string (
-		pmt::dict_ref (tmp_dict,
-			       pmt::intern ("generator"),
+		pmt::dict_ref (tmp_dict, pmt::intern ("generator"),
 			       pmt::PMT_NIL));
 	    a.set_generator (v);
 	  }
-	  if (pmt::dict_has_key (tmp_dict,
-				 pmt::intern ("comment"))) {
+	  if (pmt::dict_has_key (tmp_dict, pmt::intern ("comment"))) {
 	    std::string v = pmt::symbol_to_string (
-		pmt::dict_ref (tmp_dict,
-			       pmt::intern ("comment"),
+		pmt::dict_ref (tmp_dict, pmt::intern ("comment"),
 			       pmt::PMT_NIL));
 	    a.set_comment (v);
 	  }
 	}
 	// TODO: Parse tag values to extract other annotation fields
 	d_full_w->append_annotations (a);
+
       }
     }
 

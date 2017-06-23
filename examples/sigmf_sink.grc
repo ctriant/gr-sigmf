@@ -505,14 +505,18 @@
     </param>
     <param>
       <key>value</key>
-      <value>10e6</value>
+      <value>1e6</value>
     </param>
   </block>
   <block>
-    <key>blocks_add_xx</key>
+    <key>annotation_tagger</key>
     <param>
       <key>alias</key>
       <value></value>
+    </param>
+    <param>
+      <key>annotation_comment</key>
+      <value>annot_comment</value>
     </param>
     <param>
       <key>comment</key>
@@ -524,23 +528,27 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>True</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(511, 351)</value>
+      <value>(615, 247)</value>
     </param>
     <param>
       <key>_rotation</key>
       <value>0</value>
     </param>
     <param>
-      <key>id</key>
-      <value>blocks_add_xx_1</value>
+      <key>generator</key>
+      <value>annot_generator</value>
     </param>
     <param>
-      <key>type</key>
-      <value>short</value>
+      <key>id</key>
+      <value>annotation_tagger_0</value>
+    </param>
+    <param>
+      <key>freq_lower_edge</key>
+      <value>freq_lower_edge</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -551,12 +559,16 @@
       <value>0</value>
     </param>
     <param>
-      <key>num_inputs</key>
-      <value>2</value>
+      <key>type</key>
+      <value>complex</value>
     </param>
     <param>
-      <key>vlen</key>
-      <value>1</value>
+      <key>gate</key>
+      <value>btn</value>
+    </param>
+    <param>
+      <key>freq_upper_edge</key>
+      <value>freq_upper_edge</value>
     </param>
   </block>
   <block>
@@ -583,7 +595,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(887, 395)</value>
+      <value>(839, 395)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -612,69 +624,6 @@
     <param>
       <key>vlen</key>
       <value>1</value>
-    </param>
-  </block>
-  <block>
-    <key>burst_tagger</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>annotation_comment</key>
-      <value>annot_comment</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(631, 207)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>generator</key>
-      <value>annot_generator</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>burst_tagger_1</value>
-    </param>
-    <param>
-      <key>freq_lower_edge</key>
-      <value>freq_lower_edge</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>gate</key>
-      <value>btn</value>
-    </param>
-    <param>
-      <key>freq_upper_edge</key>
-      <value>freq_upper_edge</value>
     </param>
   </block>
   <block>
@@ -713,7 +662,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(887, 475)</value>
+      <value>(839, 483)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1052,13 +1001,15 @@
     </param>
     <param>
       <key>comment</key>
-      <value>Field file refers to the full path including filename 
-of the SigMF metadata file. Filename extension must
-be .sigmf-meta. If not the block will force the change.</value>
+      <value></value>
     </param>
     <param>
       <key>affinity</key>
       <value></value>
+    </param>
+    <param>
+      <key>dataset_filename</key>
+      <value>/home/ctriant/sigmf.sigmf-data</value>
     </param>
     <param>
       <key>datatype</key>
@@ -1073,12 +1024,8 @@ be .sigmf-meta. If not the block will force the change.</value>
       <value>True</value>
     </param>
     <param>
-      <key>metadata_filename</key>
-      <value></value>
-    </param>
-    <param>
       <key>_coordinate</key>
-      <value>(887, 179)</value>
+      <value>(839, 211)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1097,6 +1044,10 @@ be .sigmf-meta. If not the block will force the change.</value>
       <value></value>
     </param>
     <param>
+      <key>metadata_filename</key>
+      <value>/home/ctriant/sigmf.sigmf-meta</value>
+    </param>
+    <param>
       <key>offset</key>
       <value>0</value>
     </param>
@@ -1110,101 +1061,7 @@ be .sigmf-meta. If not the block will force the change.</value>
     </param>
     <param>
       <key>version</key>
-      <value>0.0.1</value>
-    </param>
-  </block>
-  <block>
-    <key>analog_const_source_x</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>const</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(319, 315)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>test</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>short</value>
-    </param>
-  </block>
-  <block>
-    <key>analog_const_source_x</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>const</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(319, 379)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>test2</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>short</value>
+      <value>0.0.2</value>
     </param>
   </block>
   <block>
@@ -2391,7 +2248,7 @@ be .sigmf-meta. If not the block will force the change.</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(311, 199)</value>
+      <value>(375, 255)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2547,44 +2404,26 @@ be .sigmf-meta. If not the block will force the change.</value>
     </param>
   </block>
   <connection>
-    <source_block_id>blocks_add_xx_1</source_block_id>
-    <sink_block_id>burst_tagger_1</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>1</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>burst_tagger_1</source_block_id>
+    <source_block_id>annotation_tagger_0</source_block_id>
     <sink_block_id>blocks_tag_debug_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>burst_tagger_1</source_block_id>
+    <source_block_id>annotation_tagger_0</source_block_id>
     <sink_block_id>qtgui_time_sink_x_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>burst_tagger_1</source_block_id>
+    <source_block_id>annotation_tagger_0</source_block_id>
     <sink_block_id>sigmf_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>test</source_block_id>
-    <sink_block_id>blocks_add_xx_1</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>test2</source_block_id>
-    <sink_block_id>blocks_add_xx_1</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>1</sink_key>
-  </connection>
-  <connection>
     <source_block_id>uhd_usrp_source_0</source_block_id>
-    <sink_block_id>burst_tagger_1</sink_block_id>
+    <sink_block_id>annotation_tagger_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

@@ -39,6 +39,7 @@ namespace gr {
     {
       public:
 	sigmf_reader (const std::string &metadata_filename,
+		      const std::string &dataset_filename,
 		      sigmfType type);
 	~sigmf_reader ();
 

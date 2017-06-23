@@ -30,11 +30,12 @@ namespace gr {
   namespace sigmf {
 
     sigmf::sigmf (const std::string &metadata_filename,
+		  const std::string &dataset_filename,
 		  sigmfType type) :
 	    d_type (type)
     {
       d_doc = new rapidjson::Document ();
-      set_filenames (metadata_filename);
+      set_filenames (metadata_filename, dataset_filename);
     }
 
     sigmf::~sigmf ()
@@ -165,7 +166,8 @@ namespace gr {
       val->AddMember ("core:version", s, (*d).GetAllocator ());
 
       if (!obj.get_sha512 ().empty ()) {
-	s.SetString (obj.get_sha512 ().c_str (), (*d).GetAllocator ());
+	s.SetString (obj.get_sha512 ().c_str (),
+		     (*d).GetAllocator ());
 	val->AddMember ("core:sha512", s, (*d).GetAllocator ());
       }
 
@@ -176,12 +178,14 @@ namespace gr {
       }
 
       if (!obj.get_author ().empty ()) {
-	s.SetString (obj.get_author ().c_str (), (*d).GetAllocator ());
+	s.SetString (obj.get_author ().c_str (),
+		     (*d).GetAllocator ());
 	val->AddMember ("core:author", s, (*d).GetAllocator ());
       }
 
       if (!obj.get_license ().empty ()) {
-	s.SetString (obj.get_license ().c_str (), (*d).GetAllocator ());
+	s.SetString (obj.get_license ().c_str (),
+		     (*d).GetAllocator ());
 	val->AddMember ("core:license", s, (*d).GetAllocator ());
       }
 
@@ -282,27 +286,50 @@ namespace gr {
       return d_type;
     }
 
-    void
-    sigmf::set_filenames (const std::string& metadata_filename)
+    const std::string&
+    gr::sigmf::sigmf::get_dataset_filename () const
     {
-      if (metadata_filename.empty()) {
-	throw std::runtime_error (
-			    "Error: Filename not given");
+      return d_dataset_filename;
+    }
+
+    const std::string&
+    gr::sigmf::sigmf::get_metadata_filename () const
+    {
+      return d_metadata_filename;
+    }
+
+    void
+    sigmf::set_filenames (const std::string& metadata_filename,
+			  const std::string& dataset_filename)
+    {
+      if (metadata_filename.empty ()) {
+	throw std::runtime_error ("Error: Filename not given");
       }
       d_metadata_filename = metadata_filename;
-      d_dataset_filename = metadata_filename;
+      d_dataset_filename = dataset_filename;
 
       std::string metafile_suffix = "sigmf-meta";
       std::string dataset_suffix = "sigmf-data";
-      size_t prefix_idx = metadata_filename.find_last_of (".") + 1;
+      size_t metadata_prefix_idx = metadata_filename.find_last_of (".") + 1;
+      size_t dataset_prefix_idx = dataset_filename.find_last_of (".") + 1;
 
-      d_metadata_filename.replace (prefix_idx,
-				   metafile_suffix.length (),
-				   metafile_suffix);
+      if (d_metadata_filename.substr (metadata_prefix_idx,
+				      metafile_suffix.length ())
+	  != metafile_suffix) {
+	throw std::runtime_error (
+	    "Error: Metadata filename extension must be .sigmf-meta");
+      }
 
-      d_dataset_filename.replace (prefix_idx,
-				  dataset_suffix.length (),
-				  dataset_suffix);
+      if (d_dataset_filename.substr (dataset_prefix_idx,
+				     dataset_suffix.length ())
+	  != dataset_suffix) {
+	throw std::runtime_error (
+	    "Error: Dataset filename extension must be .sigmf-data");
+      }
+
+      /* TODO: Check if the filename suffix for metadata and dataset
+       * is equal.
+       */
 
       std::cout << d_metadata_filename << std::endl;
       std::cout << d_dataset_filename << std::endl;

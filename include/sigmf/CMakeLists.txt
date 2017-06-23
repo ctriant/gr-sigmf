@@ -29,5 +29,5 @@ install(FILES
     sigmf_reader.h
     sigmf_writer.h
     sigmf_sink.h
-    burst_tagger.h DESTINATION include/sigmf
+    annotation_tagger.h DESTINATION include/sigmf
 )

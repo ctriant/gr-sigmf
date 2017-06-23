@@ -24,7 +24,9 @@ include(GrPlatform) #define LIB_SUFFIX
 
 include_directories(${Boost_INCLUDE_DIR},
                     ${RAPIDJSON_INCLUDE_DIRS})
+                    
 link_directories(${Boost_LIBRARY_DIRS})
+
 list(APPEND sigmf_sources
     global.cc
     capture.cc
@@ -33,7 +35,7 @@ list(APPEND sigmf_sources
     sigmf_reader.cc
     sigmf_writer.cc
     sigmf_sink_impl.cc
-    burst_tagger_impl.cc )
+    annotation_tagger_impl.cc )
 
 set(sigmf_sources "${sigmf_sources}" PARENT_SCOPE)
 if(NOT sigmf_sources)
