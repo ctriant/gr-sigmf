@@ -69,7 +69,7 @@ namespace gr {
     }
 
     void
-    annotation_tagger_impl::set_comment (const std::string &comment)
+    annotation_tagger_impl::set_annotation_comment (const std::string &comment)
     {
       d_comment = comment;
     }

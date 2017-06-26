@@ -55,7 +55,7 @@ namespace gr {
 	set_freq_upper_edge (double freq);
 
 	void
-	set_comment (const std::string &comment);
+	set_annotation_comment (const std::string &comment);
 
 	void
 	set_generator (const std::string &generator);

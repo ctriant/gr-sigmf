@@ -62,7 +62,7 @@ namespace gr {
       set_freq_upper_edge (double freq) = 0;
 
       virtual void
-      set_comment (const std::string &comment) = 0;
+      set_annotation_comment (const std::string &comment) = 0;
 
       virtual void
       set_generator (const std::string &generator) = 0;

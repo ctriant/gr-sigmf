@@ -12,13 +12,13 @@
 	<import>import sigmf</import>
 	<make>sigmf.annotation_tagger($type.size)
 self.$(id).set_generator($generator)
-self.$(id).set_comment($annotation_comment)
+self.$(id).set_annotation_comment($annotation_comment)
 self.$(id).set_tag_gate($gate)
 	</make>
 	<callback>set_freq_lower_edge($freq_lower_edge)</callback>
 	<callback>set_freq_upper_edge($freq_upper_edge)</callback>
 	<callback>set_generator($generator)</callback>
-	<callback>set_comment($annotation_comment)</callback>
+	<callback>set_annotation_comment($annotation_comment)</callback>
 	<callback>set_tag_gate($gate)</callback>
 	<param>
 	<name>Stream Type</name>
