@@ -63,8 +63,16 @@ namespace gr {
 				  SIGMF_FULL)),
 	    d_global (datatype, version, sample_rate, sha512, offset,
 		      description, author, license, hw),
-	    file_sink_base (dataset_filename.c_str (), true, false)
+	    file_sink_base (dataset_filename.c_str (), true, false),
+	    d_msg_port (pmt::mp ("tag_msg"))
     {
+      message_port_register_in (d_msg_port);
+      set_msg_handler (
+	  d_msg_port,
+	  boost::bind (&sigmf_sink_impl::handle_tag_msg, this));
+
+      d_msg_buf = new uint8_t[sizeof(tag_t)];
+
       d_full_w->append_global (d_global);
     }
 
@@ -124,8 +132,75 @@ namespace gr {
 	fflush (d_fp);
 
       return nwritten;
-//
-//      return noutput_items;
+
+    }
+
+    void
+    sigmf_sink_impl::handle_tag_msg ()
+    {
+      uint8_t *data;
+      size_t offset;
+      pmt::pmt_t v = delete_head_blocking (d_msg_port);
+      if (pmt::dict_has_key (v, pmt::intern ("offset"))) {
+	offset = pmt::to_uint64 (
+	    pmt::dict_ref (v, pmt::intern ("offset"), pmt::PMT_NIL));
+      }
+      else {
+	offset = nitems_read (0);
+      }
+
+      /* Handle RX frequency change tag.
+       * Following the format of UHD source block tags
+       */
+      pmt::pmt_t tag = pmt::dict_ref (v, pmt::intern ("rx_freq"),
+				      pmt::PMT_NIL);
+      if (!pmt::eq (tag, pmt::PMT_NIL)) {
+	capture c = capture (offset);
+	c.set_frequency (pmt::to_double (tag));
+	d_full_w->append_captures (c);
+      }
+
+      /* Handle annotation_start tag */
+      tag = pmt::dict_ref (v, pmt::intern ("annotation"),
+			   pmt::PMT_NIL);
+      if (!pmt::eq (tag, pmt::PMT_NIL)) {
+	/* Add received tag into queue */
+	if (pmt::dict_has_key (tag, pmt::intern ("sample_count"))) {
+	  annotation a = annotation (
+	      offset,
+	      pmt::to_uint64 (
+		  pmt::dict_ref (tag, pmt::intern ("sample_count"),
+				 pmt::PMT_NIL)));
+	  if (pmt::dict_has_key (tag,
+				 pmt::intern ("freq_lower_edge"))) {
+	    a.set_freq_lower_edge (
+		pmt::to_double (
+		    pmt::dict_ref (tag, pmt::intern ("freq_lower_edge"),
+				   pmt::PMT_NIL)));
+	  }
+	  else if (pmt::dict_has_key (
+	      tag, pmt::intern ("freq_upper_edge"))) {
+	    a.set_freq_upper_edge (
+		pmt::to_double (
+		    pmt::dict_ref (tag, pmt::intern ("freq_upper_edge"),
+				   pmt::PMT_NIL)));
+	  }
+	  else if (pmt::dict_has_key (tag, pmt::intern ("comment"))) {
+	    a.set_comment (
+		pmt::symbol_to_string (
+		    pmt::dict_ref (tag, pmt::intern ("comment"),
+				   pmt::PMT_NIL)));
+	  }
+	  else if (pmt::dict_has_key (tag,
+				      pmt::intern ("generator"))) {
+	    a.set_generator (
+		pmt::symbol_to_string (
+		    pmt::dict_ref (tag, pmt::intern ("generator"),
+				   pmt::PMT_NIL)));
+	  }
+	}
+      }
+
     }
 
     void

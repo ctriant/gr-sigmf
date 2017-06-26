@@ -42,6 +42,10 @@ namespace gr {
 
 	std::queue<tag_t> d_annot_tag_queue;
 
+	pmt::pmt_t d_msg_port;
+
+	uint8_t* d_msg_buf;
+
       public:
 	sigmf_sink_impl (const std::string& metadata_filename,
 			 const std::string& dataset_filename,
@@ -57,6 +61,9 @@ namespace gr {
 	work (int noutput_items,
 	      gr_vector_const_void_star &input_items,
 	      gr_vector_void_star &output_items);
+
+	void
+	handle_tag_msg ();
 
 	void
 	handle_tag (tag_t tag);

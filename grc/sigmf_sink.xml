@@ -80,5 +80,11 @@
 		<name>in</name>
 		<type>complex</type>
 	</sink>
+	
+	<sink>
+		<name>tag_msg</name>
+		<type>message</type>
+		<optional>1</optional>
+	</sink>
 
 </block>
