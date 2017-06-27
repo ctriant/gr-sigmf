@@ -37,14 +37,13 @@ namespace gr {
       d_fp = fopen (metadata_filename.c_str (), "r");
       d_frs = new rapidjson::FileReadStream (d_fp, d_buf_r,
 					     sizeof(d_buf_r));
-      if (d_doc->ParseStream<rapidjson::kParseStopWhenDoneFlag> (
+      if (d_doc->ParseStream<rapidjson::kParseStopWhenDoneFlag, rapidjson::UTF8<>, rapidjson::FileReadStream> (
 	  *d_frs).HasParseError ()) {
 	throw std::runtime_error (
 	    GetParseError_En (d_doc->GetParseError ()));
       }
-
-      init_object_iterators (d_type);
       fclose (d_fp);
+      init_object_iterators (d_type);
     }
 
     sigmf_reader::~sigmf_reader ()
@@ -292,7 +291,6 @@ namespace gr {
 	throw std::runtime_error (
 	    "get_annotation: parsing SIGMF_CAPTURE_ONLY");
       }
-
       std::vector<annotation> annotations;
       annotation a;
       for (rapidjson::Value::ValueIterator itr =
