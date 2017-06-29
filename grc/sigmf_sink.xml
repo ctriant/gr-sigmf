@@ -4,13 +4,160 @@
 	<key>sigmf_sink</key>
 	<category>[sigmf]</category>
 	<import>import sigmf</import>
-	<make>sigmf.sigmf_sink($metadata_filename, $dataset_filename, $datatype, $version,
-		$description, $author, $license, $hw, $sha512, $sample_rate, $offset)</make>
+	<make>sigmf.sigmf_sink($metadata_filename, $dataset_filename,
+		$datatype, $version,
+		$description, $author, $license, $hw, $sha512,
+		$sample_rate, $offset)
+	</make>
 
 	<param>
 		<name>Datatype</name>
 		<key>datatype</key>
 		<type>string</type>
+		<option>
+			<name>rf8_le</name>
+			<key>rf8_le</key>
+		</option>
+		<option>
+			<name>rf16_le</name>
+			<key>rf16_le</key>
+		</option>
+		<option>
+			<name>rf32_le</name>
+			<key>rf32_le</key>
+		</option>
+		<option>
+			<name>rf8_be</name>
+			<key>rf8_be</key>
+		</option>
+		<option>
+			<name>rf16_be</name>
+			<key>rf16_be</key>
+		</option>
+		<option>
+			<name>rf32_be</name>
+			<key>rf32_be</key>
+		</option>
+		<option>
+			<name>ri8_le</name>
+			<key>ri8_le</key>
+		</option>
+		<option>
+			<name>ri16_le</name>
+			<key>ri16_le</key>
+		</option>
+		<option>
+			<name>ri32_le</name>
+			<key>ri32_le</key>
+		</option>
+		<option>
+			<name>ri8_be</name>
+			<key>ri8_be</key>
+		</option>
+		<option>
+			<name>ri16_be</name>
+			<key>ri16_be</key>
+		</option>
+		<option>
+			<name>ri32_be</name>
+			<key>ri32_be</key>
+		</option>
+		<option>
+			<name>ru8_le</name>
+			<key>ru8_le</key>
+		</option>
+		<option>
+			<name>ru16_le</name>
+			<key>ru16_le</key>
+		</option>
+		<option>
+			<name>ru32_le</name>
+			<key>ru32_le</key>
+		</option>
+		<option>
+			<name>ru8_be</name>
+			<key>ru8_be</key>
+		</option>
+		<option>
+			<name>ru16_be</name>
+			<key>ru16_be</key>
+		</option>
+		<option>
+			<name>ru32_be</name>
+			<key>ru32_be</key>
+		</option>
+		<option>
+			<name>cf8_le</name>
+			<key>cf8_le</key>
+		</option>
+		<option>
+			<name>cf16_le</name>
+			<key>cf16_le</key>
+		</option>
+		<option>
+			<name>cf32_le</name>
+			<key>cf32_le</key>
+		</option>
+		<option>
+			<name>cf8_be</name>
+			<key>cf8_be</key>
+		</option>
+		<option>
+			<name>cf16_be</name>
+			<key>cf16_be</key>
+		</option>
+		<option>
+			<name>cf32_be</name>
+			<key>cf32_be</key>
+		</option>
+		<option>
+			<name>ci8_le</name>
+			<key>ci8_le</key>
+		</option>
+		<option>
+			<name>ci16_le</name>
+			<key>ci16_le</key>
+		</option>
+		<option>
+			<name>ci32_le</name>
+			<key>ci32_le</key>
+		</option>
+		<option>
+			<name>ci8_be</name>
+			<key>ci8_be</key>
+		</option>
+		<option>
+			<name>ci16_be</name>
+			<key>ci16_be</key>
+		</option>
+		<option>
+			<name>ci32_be</name>
+			<key>ci32_be</key>
+		</option>
+		<option>
+			<name>cu8_le</name>
+			<key>cu8_le</key>
+		</option>
+		<option>
+			<name>cu16_le</name>
+			<key>cu16_le</key>
+		</option>
+		<option>
+			<name>cu32_le</name>
+			<key>cu32_le</key>
+		</option>
+		<option>
+			<name>cu8_be</name>
+			<key>cu8_be</key>
+		</option>
+		<option>
+			<name>cu16_be</name>
+			<key>cu16_be</key>
+		</option>
+		<option>
+			<name>cu32_be</name>
+			<key>cu32_be</key>
+		</option>
 	</param>
 
 	<param>
@@ -69,7 +216,7 @@
 		<key>metadata_filename</key>
 		<type>file_save</type>
 	</param>
-	
+
 	<param>
 		<name>Dataset File</name>
 		<key>dataset_filename</key>
@@ -80,7 +227,7 @@
 		<name>in</name>
 		<type>complex</type>
 	</sink>
-	
+
 	<sink>
 		<name>tag_msg</name>
 		<type>message</type>
