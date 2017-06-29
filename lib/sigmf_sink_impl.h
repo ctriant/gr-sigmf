@@ -46,8 +46,10 @@ namespace gr {
 
 	uint8_t* d_msg_buf;
 
+	size_t d_itemsize;
+
       public:
-	sigmf_sink_impl (const std::string& metadata_filename,
+	sigmf_sink_impl (size_t itemsize, const std::string& metadata_filename,
 			 const std::string& dataset_filename,
 			 std::string datatype, std::string version,
 			 std::string description, std::string author,

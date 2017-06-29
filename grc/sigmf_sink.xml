@@ -4,11 +4,37 @@
 	<key>sigmf_sink</key>
 	<category>[sigmf]</category>
 	<import>import sigmf</import>
-	<make>sigmf.sigmf_sink($metadata_filename, $dataset_filename,
+	<make>sigmf.sigmf_sink($type.size, $metadata_filename, $dataset_filename,
 		$datatype, $version,
 		$description, $author, $license, $hw, $sha512,
 		$sample_rate, $offset)
 	</make>
+	
+	<param>
+		<name>Input Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>size:gr.sizeof_gr_complex</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>size:gr.sizeof_float</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>size:gr.sizeof_int</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>size:gr.sizeof_short</opt>
+		</option>
+	</param>
 
 	<param>
 		<name>Datatype</name>
@@ -225,7 +251,7 @@
 
 	<sink>
 		<name>in</name>
-		<type>complex</type>
+		<type>$type</type>
 	</sink>
 
 	<sink>

@@ -30,7 +30,7 @@ namespace gr {
   namespace sigmf {
 
     sigmf_sink::sptr
-    sigmf_sink::make (const std::string& metadata_filename,
+    sigmf_sink::make (size_t itemsize, const std::string& metadata_filename,
 		      const std::string& dataset_filename,
 		      std::string datatype, std::string version,
 		      std::string description, std::string author,
@@ -39,7 +39,7 @@ namespace gr {
 		      size_t offset)
     {
       return gnuradio::get_initial_sptr (
-	  new sigmf_sink_impl (metadata_filename, dataset_filename,
+	  new sigmf_sink_impl (itemsize, metadata_filename, dataset_filename,
 			       datatype, version, description, author,
 			       license, hw, sha512, sample_rate,
 			       offset));
@@ -49,15 +49,16 @@ namespace gr {
      * The private constructor
      */
     sigmf_sink_impl::sigmf_sink_impl (
-	const std::string& metadata_filename,
+	size_t itemsize, const std::string& metadata_filename,
 	const std::string& dataset_filename, std::string datatype,
 	std::string version, std::string description,
 	std::string author, std::string license, std::string hw,
 	std::string sha512, double sample_rate, size_t offset) :
 	    gr::sync_block (
 		"sigmf_sink",
-		gr::io_signature::make (1, 1, sizeof(gr_complex)),
+		gr::io_signature::make (1, 1, itemsize),
 		gr::io_signature::make (0, 0, 0)),
+		d_itemsize(itemsize),
 	    d_full_w (
 		new sigmf_writer (metadata_filename, dataset_filename,
 				  SIGMF_FULL)),
@@ -111,7 +112,7 @@ namespace gr {
 	return noutput_items; // drop output on the floor
 
       while (nwritten < noutput_items) {
-	int count = fwrite (inbuf, sizeof(gr_complex),
+	int count = fwrite (inbuf, d_itemsize,
 			    noutput_items - nwritten, d_fp);
 	if (count == 0) {
 	  if (ferror (d_fp)) {
@@ -125,7 +126,7 @@ namespace gr {
 	  }
 	}
 	nwritten += count;
-	inbuf += count * sizeof(gr_complex);
+	inbuf += count * d_itemsize;
       }
 
       if (d_unbuffered)

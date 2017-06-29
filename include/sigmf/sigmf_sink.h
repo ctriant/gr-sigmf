@@ -49,7 +49,7 @@ namespace gr {
 	 * creating new instances.
 	 */
 	static sptr
-	make (const std::string& metadata_filename,
+	make (size_t itemsize, const std::string& metadata_filename,
 	      const std::string& dataset_filename,
 	      std::string datatype, std::string version,
 	      std::string description = "", std::string author = "",
